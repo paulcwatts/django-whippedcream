@@ -1,0 +1,6 @@
+.env
+.project
+.pydevproject
+*.pyc
+local_settings.py
+django_whippedcream.egg-info
