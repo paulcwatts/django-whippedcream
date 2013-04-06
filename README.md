@@ -7,7 +7,7 @@ my life with tastypie easier.
 
 ## Requirements
 
-django-tastypie, of course. pytz is also recommended, and required for <code>UTCDateTimeField</code>
+django-tastypie, of course. 
 
 ## Serializer
 
