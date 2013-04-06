@@ -21,19 +21,37 @@ you can see the DB queries used to create this request.
     from whippedcream.serializer import Serializer
 
     class MyResource(Resource):
-        # fields...
-
         class Meta:
             serializer = Serializer()
 
-## UTCDateTimeField
+In addition, the serializer allows you to serialize aware datetimes, something
+which the default serialized can't (at the time of this writing).
 
-This returns a normalized version of a DateTimeField. It removes any milliseconds
-and converted naive datetimes to aware datetimes.
+## DateTimeField
 
-    from whippedcream.fields import UTCDateTimeField
+This is a simple addition to the DateTimeField that removes milliseconds
+from the field. This is useful if you don't want to provide that level
+of accuracy, but also if your database engine doesn't store that level
+of accuracy (MySQL).
 
-## Mixins
+    from whippedcream.fields import DateTimeField
 
-### ViewAccessMixin
+    class MyResource(Resource):
+        dt = DateTimeField('dt', normalize=True)
+
+## PyAccessMixin
+
+This mixin class can be added to any resource where you may want to 
+access a serialized (JSON) version in any of your regular python code.
+It basically implements this pattern:
+
+http://django-tastypie.readthedocs.org/en/latest/cookbook.html#using-your-resource-in-regular-views
+
+    from whippedcream.mixins import PyAccessMixin
+
+    class MyResource(MyAccessMixin, Resource):
+        pass
+
+    # elsewhere...
+    result = MyResource().get_json(request, obj)
 

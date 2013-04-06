@@ -3,6 +3,7 @@ from datetime import datetime
 from tastypie.resources import Resource
 from tastypie import fields
 from whippedcream.fields import DateTimeField
+from whippedcream.mixins import PyAccessMixin
 from whippedcream.serializer import Serializer
 
 
@@ -47,7 +48,7 @@ class NamesResourceDefault(Resource):
         return NAMES
 
 
-class NamesResource(Resource):
+class NamesResource(PyAccessMixin, Resource):
     id = fields.IntegerField('id')
     name = fields.CharField('name')
 

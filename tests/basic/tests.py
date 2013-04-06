@@ -1,7 +1,10 @@
 import time
 from datetime import datetime
+from django.http import HttpRequest
 from django.test import TestCase
 from django.utils.unittest import skipUnless
+
+from resources import Name, NamesResource
 
 try:
     import json as simplejson
@@ -25,6 +28,26 @@ class SerializerTest(TestCase):
         response = self.client.get('/api/v1/names/', HTTP_ACCEPT='text/html')
         self.assertEqual('text/html; charset=utf-8', response['Content-Type'])
         self.assertContains(response, 'Debug JSON')
+
+
+class ViewAccessMixin(TestCase):
+    def test_get_obj(self):
+        req = HttpRequest()
+        obj = Name(1, "Miles Davis")
+        r = NamesResource()
+        result = r.get_json(req, obj)
+        EXPECTED = '{"id": 1, "name": "Miles Davis", "resource_uri": ""}'
+        self.assertEqual(EXPECTED, result)
+
+    def test_get_list(self):
+        req = HttpRequest()
+        obj1 = Name(1, "Miles Davis")
+        obj2 = Name(2, "John Coltrane")
+        r = NamesResource()
+        result = r.get_json_list(req, [obj1, obj2])
+        EXPECTED1 = '{"id": 1, "name": "Miles Davis", "resource_uri": ""}'
+        EXPECTED2 = '{"id": 2, "name": "John Coltrane", "resource_uri": ""}'
+        self.assertEqual("[" + EXPECTED1 + ", " + EXPECTED2 + "]", result)
 
 
 @skipUnless(pytz, "This test requires pytz")
