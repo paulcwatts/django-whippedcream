@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from django.core.urlresolvers import reverse
 from django.http import HttpRequest
 from django.test import TestCase
 from django.utils.unittest import skipUnless
@@ -72,3 +73,15 @@ class DateTimeFieldTest(TestCase):
             u'resource_uri': u'',
         }
         self.assertEqual(result, EXPECTED)
+
+
+class ApiTest(TestCase):
+    def test_url_get(self):
+        response = self.client.get('/apinoname/names/')
+        self.assertEqual('application/json', response['Content-Type'])
+
+    def test_reverse(self):
+        # This is able to reverse a URL
+        url = reverse("api_dispatch_list",
+                      kwargs={'api_name': '', 'resource_name': 'names'})
+        self.assertEqual('/apinoname/names/', url)
