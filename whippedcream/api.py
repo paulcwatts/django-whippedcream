@@ -26,10 +26,13 @@ class Api(BaseApi):
         """
         if self.api_name:
             api_pattern = '(?P<api_name>%s)'
+            top_level = r"^%s%s$" % (api_pattern, trailing_slash())
         else:
             api_pattern = '(?P<api_name>)'
+            top_level = r"^$"
+
         pattern_list = [
-            url(r"^%s%s$" % (api_pattern, trailing_slash()), self.wrap_view('top_level'), name="api_%s_top_level" % self.api_name),
+            url(top_level, self.wrap_view('top_level'), name="api_%s_top_level" % self.api_name),
         ]
 
         for name in sorted(self._registry.keys()):

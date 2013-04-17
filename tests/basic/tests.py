@@ -80,6 +80,10 @@ class ApiTest(TestCase):
         response = self.client.get('/apinoname/names/')
         self.assertEqual('application/json', response['Content-Type'])
 
+    def test_top_level(self):
+        response = self.client.get('/apinoname/')
+        self.assertEqual('application/json', response['Content-Type'])
+
     def test_reverse(self):
         # This is able to reverse a URL
         url = reverse("api_dispatch_list",
