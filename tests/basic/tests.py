@@ -1,4 +1,6 @@
 import time
+import json
+from StringIO import StringIO
 from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
@@ -89,3 +91,31 @@ class ApiTest(TestCase):
         url = reverse("api_dispatch_list",
                       kwargs={'api_name': '', 'resource_name': 'names'})
         self.assertEqual('/apinoname/names/', url)
+
+
+class FileUploadTest(TestCase):
+    def test_upload(self):
+        fileobj = StringIO("This is my file.")
+        fileobj.name = "hello.txt"
+        response = self.client.post('/api/v1/file/', {'myfile': fileobj})
+        self.assertEqual(201, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+        content = json.loads(response.content)
+        self.assertIn('resource_uri', content)
+
+        # Now we should be able to get this file?
+        response = self.client.get(content['resource_uri'])
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+        content = json.loads(response.content)
+        self.assertEqual('hello.txt', content['myfile'])
+
+    def test_absfile(self):
+        fileobj = StringIO("This is my absolute file.")
+        fileobj.name = "hello2.txt"
+        response = self.client.post('/api/v1/file/', {'myabsfile': fileobj})
+        self.assertEqual(201, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+        content = json.loads(response.content)
+        self.assertIn('resource_uri', content)
+        self.assertTrue(content['myabsfile'].startswith("http://"))

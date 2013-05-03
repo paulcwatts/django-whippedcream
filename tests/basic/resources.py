@@ -1,9 +1,11 @@
 from datetime import datetime
 
+from tastypie.bundle import Bundle
+from tastypie.exceptions import NotFound
 from tastypie.resources import Resource
 from tastypie import fields
-from whippedcream.fields import DateTimeField
-from whippedcream.mixins import PyAccessMixin
+from whippedcream.fields import DateTimeField, FileField
+from whippedcream.mixins import PyAccessMixin, MultiPartFormDataMixin
 from whippedcream.serializer import Serializer
 
 
@@ -23,6 +25,10 @@ class DateTime(object):
         except ImportError:
             # We can't test this...
             pass
+
+
+class FileObj(object):
+    pass
 
 
 NAMES = [
@@ -86,3 +92,47 @@ class DateTimeResource(Resource):
         # (Yes, I know this is ugly, it's just for testing)
         ts = float(id.replace('_', '.'))
         return DateTime(datetime.utcfromtimestamp(ts))
+
+
+FILES = []
+
+class FileResource(MultiPartFormDataMixin, Resource):
+    myfile = FileField('myfile', null=True)
+    myabsfile = FileField('absfile', absolute=True, null=True)
+
+    class Meta:
+        resource_name = 'file'
+        object_class = FileObj
+        list_allowed_methods = ('post',)
+        detail_allowed_methods = ('get',)
+        always_return_data = True
+
+    def obj_create(self, bundle, **kwargs):
+        bundle.obj = self._meta.object_class()
+        for key, value in kwargs.items():
+            setattr(bundle.obj, key, value)
+
+        setattr(bundle.obj, 'pk', len(FILES) + 1)
+        bundle = self.full_hydrate(bundle)
+        return self.save(bundle)
+
+    def save(self, bundle, skip_errors=False):
+        FILES.append(bundle.obj)
+        return bundle
+
+    def obj_get(self, bundle, **kwargs):
+        try:
+            bundle.obj = FILES[int(kwargs['pk']) - 1]
+            return bundle.obj
+        except (KeyError, ValueError):
+            raise NotFound("Invalid resource lookup data provided (mismatched type).")
+
+    def detail_uri_kwargs(self, bundle_or_obj):
+        kwargs = {}
+
+        if isinstance(bundle_or_obj, Bundle):
+            kwargs[self._meta.detail_uri_name] = getattr(bundle_or_obj.obj, self._meta.detail_uri_name)
+        else:
+            kwargs[self._meta.detail_uri_name] = getattr(bundle_or_obj, self._meta.detail_uri_name)
+
+        return kwargs
