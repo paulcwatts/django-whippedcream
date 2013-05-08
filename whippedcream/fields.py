@@ -7,7 +7,7 @@ class DateTimeField(BaseDateTimeField):
         self.normalize = kwargs.pop('normalize', True)
         super(DateTimeField, self).__init__(*args, **kwargs)
 
-    def dehydrate(self, bundle):
+    def dehydrate(self, bundle, for_list=True):
         value = super(DateTimeField, self).dehydrate(bundle)
         if value:
             value = value.replace(microsecond=0)
@@ -33,7 +33,7 @@ class FileField(BaseFileField):
         self.absolute = kwargs.pop('absolute', False)
         super(FileField, self).__init__(*args, **kwargs)
 
-    def dehydrate(self, bundle):
+    def dehydrate(self, bundle, for_list=True):
         value = super(FileField, self).dehydrate(bundle)
         if value and self.absolute and hasattr(bundle, 'request'):
             value = bundle.request.build_absolute_uri(unicode(value))
