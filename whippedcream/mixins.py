@@ -1,3 +1,5 @@
+import warnings
+
 from django.http import HttpResponse
 from tastypie import http
 from tastypie.utils import dict_strip_unicode_keys
@@ -6,22 +8,50 @@ from tastypie.utils.mime import build_content_type
 
 class PyAccessMixin(object):
     """
-    Provides a simple way of getting serialized JSON from
-    a resource from python. This is basically a simple way
-    of implementing this recipe:
+    Allows "dict" access to resources within Python. Used in views.
+
+    Copied from tastypie, but implemented similarly to a pattern
+    described here:
     http://django-tastypie.readthedocs.org/en/latest/cookbook.html#using-your-resource-in-regular-views
     """
-
     def get_json(self, request, obj):
+        warnings.warn("use obj_to_simple instead", DeprecationWarning)
         bundle = self.build_bundle(obj=obj, request=request)
         return self.serialize(None, self.full_dehydrate(bundle),
                               'application/json')
 
     def get_json_list(self, request, obj_list):
+        warnings.warn("use list_to_simple instead", DeprecationWarning)
         bundles = [self.build_bundle(obj=obj, request=request)
                    for obj in obj_list]
         to_be_serialized = [self.full_dehydrate(bundle) for bundle in bundles]
         return self.serialize(None, to_be_serialized, 'application/json')
+
+    def get_queryset(self):
+        return self._meta.queryset
+
+    def obj_to_simple(self, request, obj):
+        bundle = self.build_bundle(obj=obj, request=request)
+        return self._meta.serializer.to_simple(self.full_dehydrate(bundle), {})
+
+    def list_to_simple(self, request, obj_list, limit=None):
+        limit = limit if limit is not None else self._meta.limit
+        paginator = self._meta.paginator_class(request.GET, obj_list,
+                                               resource_uri=self.get_resource_uri(),
+                                               limit=limit,
+                                               max_limit=self._meta.max_limit,
+                                               collection_name=self._meta.collection_name)
+        to_be_serialized = paginator.page()
+
+        # Dehydrate the bundles in preparation for serialization.
+        bundles = []
+
+        for obj in to_be_serialized[self._meta.collection_name]:
+            bundle = self.build_bundle(obj=obj, request=request)
+            bundles.append(self.full_dehydrate(bundle))
+
+        to_be_serialized[self._meta.collection_name] = bundles
+        return self._meta.serializer.to_simple(to_be_serialized, {})
 
 
 class MultiPartFormDataMixin(object):
