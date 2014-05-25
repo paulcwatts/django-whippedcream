@@ -1,3 +1,5 @@
+import six
+
 from datetime import datetime
 
 from tastypie.bundle import Bundle
@@ -110,7 +112,7 @@ class FileResource(MultiPartFormDataMixin, Resource):
 
     def obj_create(self, bundle, **kwargs):
         bundle.obj = self._meta.object_class()
-        for key, value in kwargs.items():
+        for key, value in six.iteritems(kwargs):
             setattr(bundle.obj, key, value)
 
         setattr(bundle.obj, 'pk', len(FILES) + 1)

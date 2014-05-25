@@ -35,7 +35,7 @@ class FileField(BaseFileField):
     def dehydrate(self, bundle, for_list=True):
         value = super(FileField, self).dehydrate(bundle)
         if value and self.absolute and hasattr(bundle, 'request'):
-            value = bundle.request.build_absolute_uri(unicode(value))
+            value = bundle.request.build_absolute_uri(str(value))
         return value
 
     def hydrate(self, bundle):

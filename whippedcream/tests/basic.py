@@ -1,18 +1,14 @@
 import time
 import json
-from StringIO import StringIO
+import six
+from six import BytesIO
 from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
 from django.test import TestCase
 from django.utils.unittest import skipUnless
 
-from resources import Name, NamesResource
-
-try:
-    import json as simplejson
-except ImportError:  # < Python 2.6
-    from django.utils import simplejson
+from .resources import Name, NamesResource
 
 try:
     import pytz
@@ -64,13 +60,14 @@ class DateTimeFieldTest(TestCase):
         response = self.client.get('/api/v1/dt/%s/' % id)
         # We should get JSON back
         self.assertEqual('application/json', response['Content-Type'])
-        result = simplejson.loads(response.content)
+        result = json.loads(response.content.decode('utf-8'))
+        ms = "250000" if six.PY2 else "246010"
         EXPECTED = {
             u'dt': u'2013-04-05T19:24:30',
             u'dt_normalized': u'2013-04-05T19:24:30',
-            u'dt_default': u'2013-04-05T19:24:30.250000',
+            u'dt_default': u'2013-04-05T19:24:30.' + ms,
             u'dt_aware': u'2013-04-05T19:24:30+00:00',
-            u'dt_aware_default': u'2013-04-05T19:24:30.250000+00:00',
+            u'dt_aware_default': u'2013-04-05T19:24:30.{0}+00:00'.format(ms),
             u'dt_aware_normalized': u'2013-04-05T19:24:30+00:00',
             u'resource_uri': u'',
         }
@@ -95,27 +92,27 @@ class ApiTest(TestCase):
 
 class FileUploadTest(TestCase):
     def test_upload(self):
-        fileobj = StringIO("This is my file.")
+        fileobj = BytesIO(b"This is my file.")
         fileobj.name = "hello.txt"
         response = self.client.post('/api/v1/file/', {'myfile': fileobj})
         self.assertEqual(201, response.status_code)
         self.assertEqual('application/json', response['Content-Type'])
-        content = json.loads(response.content)
+        content = json.loads(response.content.decode('utf-8'))
         self.assertIn('resource_uri', content)
 
         # Now we should be able to get this file?
         response = self.client.get(content['resource_uri'])
         self.assertEqual(200, response.status_code)
         self.assertEqual('application/json', response['Content-Type'])
-        content = json.loads(response.content)
+        content = json.loads(response.content.decode('utf-8'))
         self.assertEqual('hello.txt', content['myfile'])
 
     def test_absfile(self):
-        fileobj = StringIO("This is my absolute file.")
+        fileobj = BytesIO(b"This is my absolute file.")
         fileobj.name = "hello2.txt"
         response = self.client.post('/api/v1/file/', {'myabsfile': fileobj})
         self.assertEqual(201, response.status_code)
         self.assertEqual('application/json', response['Content-Type'])
-        content = json.loads(response.content)
+        content = json.loads(response.content.decode('utf-8'))
         self.assertIn('resource_uri', content)
         self.assertTrue(content['myabsfile'].startswith("http://"))

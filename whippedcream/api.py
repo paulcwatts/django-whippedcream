@@ -7,7 +7,7 @@ except:
 
 from tastypie.api import Api as BaseApi
 from tastypie.utils import trailing_slash
-from serializer import Serializer
+from .serializer import Serializer
 
 
 class Api(BaseApi):

@@ -1,10 +1,8 @@
 from tastypie.api import Api as BaseApi
 
 from whippedcream.api import Api
-from resources import NamesResourceDefault, \
-    NamesResource, \
-    DateTimeResource, \
-    FileResource
+from .resources import (NamesResourceDefault, NamesResource,
+                        DateTimeResource, FileResource)
 
 
 v1_api = BaseApi(api_name='v1')
