@@ -27,6 +27,7 @@ class SerializerTest(TestCase):
         response = self.client.get('/api/v1/names/', HTTP_ACCEPT='text/html')
         self.assertEqual('text/html; charset=utf-8', response['Content-Type'])
         self.assertContains(response, 'Debug JSON')
+        self.assertTemplateUsed(response, 'api_debug.html')
 
 
 class ViewAccessMixin(TestCase):

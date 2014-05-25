@@ -1,3 +1,4 @@
+from django.template.loader import render_to_string
 from tastypie.serializers import Serializer as BaseSerializer
 from tastypie.utils import format_datetime, make_naive
 
@@ -16,14 +17,8 @@ class Serializer(BaseSerializer):
     have them serialized with a timezone value. Pass allow_aware_datetime=True
     to the constructor.
     """
-    html_body = """<!DOCTYPE html>
-<html>
-<head></head>
-<!-- We need the h1 to prevent JSONView from taking over -->
-<body><h1>Debug JSON</h1><pre class="json">%s</pre></body>
-</html>"""
-
     def __init__(self, *args, **kwargs):
+        self.template_name = kwargs.pop('template_name', 'api_debug.html')
         self.allow_aware_datetime = kwargs.pop('allow_aware_datetime', False)
         super(Serializer, self).__init__(*args, **kwargs)
 
@@ -48,4 +43,4 @@ class Serializer(BaseSerializer):
         data = self.to_simple(data, options)
         jsontext = simplejson.dumps(data, cls=json.DjangoJSONEncoder,
                                     indent=4, sort_keys=True)
-        return self.html_body % jsontext
+        return render_to_string(self.template_name, {'content': jsontext})

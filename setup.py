@@ -9,5 +9,6 @@ setup(
     description='Utilities that make tastypie taste better.',
     license='BSD',
     url='https://github.com/paulcwatts/django-whippedcream',
+    include_package_data=True,
     packages=find_packages()
 )
