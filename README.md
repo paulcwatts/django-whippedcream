@@ -1,5 +1,7 @@
 # django-whippedcream
 
+[![Build Status](https://travis-ci.org/paulcwatts/django-whippedcream.svg)](https://travis-ci.org/paulcwatts/django-whippedcream)
+
 The perfect counterpart to [django-tastypie](https://github.com/toastdriven/django-tastypie).
 
 django-whippedcream provides a few mixins and utilities that I've used to make
