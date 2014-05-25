@@ -1,5 +1,15 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+import os
+import codecs
+from setuptools import setup
+
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+
+if os.path.exists('README.rst'):
+    long_description = codecs.open('README.rst', 'r', 'utf-8').read()
+else:
+    long_description = 'See https://github.com/paulcwatts/django-whippedcream'
 
 setup(
     name='django-whippedcream',
@@ -10,5 +20,19 @@ setup(
     license='BSD',
     url='https://github.com/paulcwatts/django-whippedcream',
     include_package_data=True,
-    packages=find_packages()
+    packages=[
+        'whippedcream',
+        'whippedcream.runtests',
+        'whippedcream.tests'
+    ],
+    classifiers=[
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3'
+    ],
+    long_description=long_description
 )

@@ -1,17 +1,30 @@
-# django-whippedcream
+===================
+django-whippedcream
+===================
 
-[![Build Status](https://travis-ci.org/paulcwatts/django-whippedcream.svg)](https://travis-ci.org/paulcwatts/django-whippedcream)
+.. image:: https://travis-ci.org/paulcwatts/django-whippedcream.png?branch=master   
+   :target: https://travis-ci.org/paulcwatts/django-whippedcream
 
-The perfect counterpart to [django-tastypie](https://github.com/toastdriven/django-tastypie).
+The perfect counterpart to django-tastypie_.
 
 django-whippedcream provides a few mixins and utilities that I've used to make
 my life with tastypie easier. 
 
-## Requirements
+Tested using django-tastypie 0.11, Django 1.6.5, with Python 2.7 and 3.3.
 
-django-tastypie, of course. 
+Requirements
+============
 
-## Serializer
+django-tastypie, of course. Also pytz if you want to use the DateTimeSerializer.
+
+Installation
+============
+
+1. Install: ``pip install django-whippedcream``
+2. Add ``whippedcream`` to your ``INSTALLED_APPS``.
+
+Serializer
+----------
 
 Want to browse your API through the browser? Try doing that but not adding format=json,
 you get an error that format=html isn't implement.
@@ -27,27 +40,37 @@ you can see the DB queries used to create this request.
             serializer = Serializer()
 
 In addition, the serializer allows you to serialize aware datetimes, something
-which the default serialized can't (at the time of this writing).
+which the default serialized can't (at the time of this writing). 
 
-## DateTimeField
+If you don't like the default HTML, you can override this by providing your own
+``api_debug.html`` template. The JSON text is provided in a context variable called
+``content``.
+
+DateTimeField
+-------------
 
 This is a simple addition to the DateTimeField that removes milliseconds
 from the field. This is useful if you don't want to provide that level
 of accuracy, but also if your database engine doesn't store that level
 of accuracy (MySQL).
 
+::
+
     from whippedcream.fields import DateTimeField
 
     class MyResource(Resource):
         dt = DateTimeField('dt', normalize=True)
 
-## PyAccessMixin
+PyAccessMixin
+-------------
 
 This mixin class can be added to any resource where you may want to 
 access a serialized (JSON) version in any of your regular python code.
 It basically implements this pattern:
 
 http://django-tastypie.readthedocs.org/en/latest/cookbook.html#using-your-resource-in-regular-views
+
+::
 
     from whippedcream.mixins import PyAccessMixin
 
@@ -57,3 +80,5 @@ http://django-tastypie.readthedocs.org/en/latest/cookbook.html#using-your-resour
     # elsewhere...
     result = MyResource().get_json(request, obj)
 
+
+.. _django-tastypie: https://github.com/toastdriven/django-tastypie
