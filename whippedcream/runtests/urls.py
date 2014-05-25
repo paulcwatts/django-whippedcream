@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 
-from basic.urls import v1_api, noname_api
+from whippedcream.tests.urls import v1_api, noname_api
 
 
 urlpatterns = patterns(

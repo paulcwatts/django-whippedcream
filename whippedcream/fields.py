@@ -20,7 +20,6 @@ class DateTimeField(BaseDateTimeField):
         return value
 
 
-
 class FileField(BaseFileField):
     """
     Provides a way of dehydrating the file URL as an absolute URL,

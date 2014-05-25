@@ -96,6 +96,7 @@ class DateTimeResource(Resource):
 
 FILES = []
 
+
 class FileResource(MultiPartFormDataMixin, Resource):
     myfile = FileField('myfile', null=True)
     myabsfile = FileField('absfile', absolute=True, null=True)

@@ -96,7 +96,7 @@ class MultiPartFormDataMixin(object):
 
         if 'HTTP_ACCEPT' in request.META:
             types = [t.strip() for t in request.META['HTTP_ACCEPT'].split(',')]
-            if not desired_format in types:
+            if desired_format not in types:
                 desired_format = 'text/plain'
 
         return response_class(content=serialized, content_type=build_content_type(desired_format), **response_kwargs)

@@ -101,7 +101,7 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tests.urls'
+ROOT_URLCONF = 'whippedcream.runtests.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'tests.wsgi.application'
@@ -115,8 +115,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'basic'
+    'django.contrib.staticfiles'
 )
 
 # A sample logging configuration. The only tangible logging

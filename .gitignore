@@ -1,7 +1,8 @@
 .env
-.idea
+/.idea/
 .project
 .pydevproject
 *.pyc
 local_settings.py
-django_whippedcream.egg-info
+/django_whippedcream.egg-info/
+/.tox/
