@@ -5,6 +5,7 @@
 # http://code.djangoproject.com/svn/django/trunk/tests/runtests.py
 import os
 import sys
+import django
 
 # fix sys path so we don't need to setup PYTHONPATH
 sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
@@ -21,6 +22,10 @@ def main():
     ALL_TESTS = [
         'whippedcream.tests.basic'
     ]
+
+    if django.VERSION[0] == 1 and django.VERSION[1] >= 7:
+        django.setup()
+
     failures = test_runner.run_tests(ALL_TESTS)
 
     sys.exit(failures)
