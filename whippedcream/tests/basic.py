@@ -6,7 +6,10 @@ from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
 from django.test import TestCase
-from django.utils.unittest import skipUnless
+try:
+    from unittest import skipUnless
+except ImportError:
+    from django.utils.unittest import skipUnless
 
 from .resources import Name, NamesResource
 
@@ -35,7 +38,7 @@ class ViewAccessMixin(TestCase):
         req = HttpRequest()
         obj = Name(1, "Miles Davis")
         r = NamesResource()
-        result = r.get_json(req, obj)
+        result = json.dumps(r.obj_to_simple(req, obj), sort_keys=True)
         EXPECTED = '{"id": 1, "name": "Miles Davis", "resource_uri": ""}'
         self.assertEqual(EXPECTED, result)
 
@@ -44,10 +47,11 @@ class ViewAccessMixin(TestCase):
         obj1 = Name(1, "Miles Davis")
         obj2 = Name(2, "John Coltrane")
         r = NamesResource()
-        result = r.get_json_list(req, [obj1, obj2])
+        result = json.dumps(r.list_to_simple(req, [obj1, obj2]), sort_keys=True)
+        META = '"meta": {"limit": 20, "next": null, "offset": 0, "previous": null, "total_count": 2}'
         EXPECTED1 = '{"id": 1, "name": "Miles Davis", "resource_uri": ""}'
         EXPECTED2 = '{"id": 2, "name": "John Coltrane", "resource_uri": ""}'
-        self.assertEqual("[" + EXPECTED1 + ", " + EXPECTED2 + "]", result)
+        self.assertEqual('{{{}, "objects": [{}, {}]}}'.format(META, EXPECTED1, EXPECTED2), result)
 
 
 @skipUnless(pytz, "This test requires pytz")

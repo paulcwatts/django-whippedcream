@@ -78,7 +78,7 @@ http://django-tastypie.readthedocs.org/en/latest/cookbook.html#using-your-resour
         pass
 
     # elsewhere...
-    result = MyResource().get_json(request, obj)
+    result = MyResource().obj_to_simple(request, obj)
 
 
 .. _django-tastypie: https://github.com/toastdriven/django-tastypie

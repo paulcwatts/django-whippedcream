@@ -1,10 +1,6 @@
 import warnings
-try:
-    from django.conf.urls import include, patterns, url
-except:
-    # Django < 1.4
-    from django.conf.urls.defaults import include, patterns, url
 
+from django.conf.urls import include, patterns, url
 from tastypie.api import Api as BaseApi
 from tastypie.utils import trailing_slash
 from .serializer import Serializer
