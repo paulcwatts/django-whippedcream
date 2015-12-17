@@ -13,7 +13,7 @@ else:
 
 setup(
     name='django-whippedcream',
-    version='0.2.1',
+    version='0.2.2',
     author='Paul Watts',
     author_email='paulcwatts@gmail.com',
     description='Utilities that make tastypie taste better.',
@@ -32,8 +32,8 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4'
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5'
     ],
     long_description=long_description
 )
