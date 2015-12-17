@@ -5,9 +5,15 @@ python:
 env:
   - TOX_ENV=py2.7-tp0.12-django1.7
   - TOX_ENV=py2.7-tp0.12-django1.8
+  - TOX_ENV=py2.7-tp-dev-django1.8
+  - TOX_ENV=py2.7-tp-dev-django1.9
   - TOX_ENV=py3.4-tp0.12-django1.7
   - TOX_ENV=py3.4-tp0.12-django1.8
+  - TOX_ENV=py3.4-tp-dev-django1.8
+  - TOX_ENV=py3.4-tp-dev-django1.9
   - TOX_ENV=py3.5-tp0.12-django1.8
+  - TOX_ENV=py3.5-tp-dev-django1.8
+  - TOX_ENV=py3.5-tp-dev-django1.9
   - TOX_ENV=flake8
 install:
   - pip install tox

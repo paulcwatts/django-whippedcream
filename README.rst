@@ -10,7 +10,7 @@ The perfect counterpart to django-tastypie_.
 django-whippedcream provides a few mixins and utilities that I've used to make
 my life with tastypie easier. 
 
-Tested using django-tastypie 0.11, Django 1.6.5, with Python 2.7 and 3.3.
+Tested using django-tastypie>0.12, Django>1.7, and Python 2.7 and >3.4
 
 Requirements
 ============
@@ -22,29 +22,6 @@ Installation
 
 1. Install: ``pip install django-whippedcream``
 2. Add ``whippedcream`` to your ``INSTALLED_APPS``.
-
-Serializer
-----------
-
-Want to browse your API through the browser? Try doing that but not adding format=json,
-you get an error that format=html isn't implement.
-
-Now it is -- very simply. But it allows you to view a GET request from the browser.
-What's best, if you have django-debug-toolbar installed (and why wouldn't you)
-you can see the DB queries used to create this request.
-
-    from whippedcream.serializer import Serializer
-
-    class MyResource(Resource):
-        class Meta:
-            serializer = Serializer()
-
-In addition, the serializer allows you to serialize aware datetimes, something
-which the default serialized can't (at the time of this writing). 
-
-If you don't like the default HTML, you can override this by providing your own
-``api_debug.html`` template. The JSON text is provided in a context variable called
-``content``.
 
 DateTimeField
 -------------
